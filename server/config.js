@@ -3,6 +3,11 @@
 
 export const statusPages = [
   {
+    name: 'Claude',
+    url: 'https://status.claude.com/api/v2/status.json',
+    type: 'atlassian'
+  },
+  {
     name: 'GitHub',
     url: 'https://www.githubstatus.com/api/v2/status.json',
     type: 'atlassian'
