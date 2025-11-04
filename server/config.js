@@ -19,7 +19,7 @@ export const statusPages = [
   },
   {
     name: 'Stripe',
-    url: 'https://status.stripe.com/api/v2/status.json',
+    url: 'https://www.stripestatus.com/api/v2/status.json',
     type: 'atlassian'
   },
   {
@@ -29,12 +29,12 @@ export const statusPages = [
   },
   {
     name: 'Slack',
-    url: 'https://status.slack.com/api/v2/status.json',
-    type: 'atlassian'
+    url: 'https://slack-status.com/api/v2.0.0/current',
+    type: 'slack'
   },
   {
     name: 'Linear',
-    url: 'https://status.linear.app/api/v2/status.json',
+    url: 'https://linearstatus.com/api/v2/status.json',
     type: 'atlassian'
   }
 ];
