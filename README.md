@@ -4,7 +4,7 @@ A beautiful web application that aggregates and displays status pages from multi
 
 ## Features
 
-- **28 Popular Services**: Monitor status of major developer tools and platforms
+- **49 Popular Services**: Monitor status of major developer tools and platforms
 - **Configurable Dashboard**: Select which services to monitor from the settings page
 - **Real-time Monitoring**: Displays current status of all enabled services
 - **Historical Tracking**: Track when issues start, how long they persist, and when status changes
@@ -22,7 +22,7 @@ A beautiful web application that aggregates and displays status pages from multi
 
 ## Supported Services
 
-StatusWall monitors 28 popular developer services (alphabetically):
+StatusWall monitors 49 popular developer services including:
 
 1. **Cloudflare** - CDN & security
 2. **DigitalOcean** - Cloud infrastructure
