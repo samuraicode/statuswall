@@ -13,14 +13,6 @@ const statusConfig = {
 function StatusCard({ status, onClick }) {
   const statusInfo = statusConfig[status.status] || statusConfig.unknown
 
-  const handleCardClick = (e) => {
-    // Don't trigger if clicking on the link
-    if (e.target.closest('.status-link')) {
-      return
-    }
-    onClick?.()
-  }
-
   // Format duration
   const formatDuration = (ms) => {
     if (!ms) return null
@@ -54,7 +46,7 @@ function StatusCard({ status, onClick }) {
   }
 
   return (
-    <div className="status-card" onClick={handleCardClick}>
+    <div className="status-card" onClick={onClick}>
       <div className="card-header">
         <h3 className="service-name">{status.name}</h3>
         <div
@@ -89,19 +81,6 @@ function StatusCard({ status, onClick }) {
           </div>
         )}
       </div>
-
-      {status.url && (
-        <div className="card-footer">
-          <a
-            href={status.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="status-link"
-          >
-            View Full Status Page →
-          </a>
-        </div>
-      )}
     </div>
   )
 }
