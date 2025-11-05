@@ -119,13 +119,13 @@
 }
 
 .interval-select:hover {
-  border-color: #667eea;
+  border-color: #3b82f6;
 }
 
 .interval-select:focus {
   outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
 .config-footer {
@@ -138,7 +138,7 @@
 }
 
 .btn-primary {
-  background: #667eea;
+  background: #3b82f6;
   color: white;
   border: none;
   padding: 0.75rem 2rem;
@@ -150,9 +150,9 @@
 }
 
 .btn-primary:hover:not(:disabled) {
-  background: #5568d3;
+  background: #2563eb;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
 }
 
 .btn-primary:disabled {
@@ -162,8 +162,8 @@
 
 .btn-secondary {
   background: white;
-  color: #667eea;
-  border: 2px solid #667eea;
+  color: #3b82f6;
+  border: 2px solid #3b82f6;
   padding: 0.75rem 1.5rem;
   border-radius: 8px;
   font-size: 1rem;
@@ -173,7 +173,7 @@
 }
 
 .btn-secondary:hover {
-  background: #667eea;
+  background: #3b82f6;
   color: white;
 }
 
