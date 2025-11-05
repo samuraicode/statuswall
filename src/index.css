@@ -13,6 +13,7 @@ body {
   background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
   min-height: 100vh;
   color: #1f2937;
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
 code {

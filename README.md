@@ -4,21 +4,22 @@ A beautiful web application that aggregates and displays status pages from multi
 
 ## Features
 
-- **25 Popular Services**: Monitor status of major developer tools and platforms
+- **27 Popular Services**: Monitor status of major developer tools and platforms
 - **Configurable Dashboard**: Select which services to monitor from the settings page
 - **Real-time Monitoring**: Displays current status of all enabled services
 - **Flexible Auto-refresh**: Choose refresh intervals from 1 minute to 1 hour
 - **Visual Countdown**: Progress bar shows time until next refresh
-- **Priority Sorting**: Services with issues appear first
+- **Smart Sorting**: Services with issues appear first, then alphabetically
+- **Dark Mode**: Toggle between light and dark themes with persistent preference
 - **Clean UI**: Modern, responsive design with blue gradient theme
-- **Component Details**: View individual component statuses for each service
+- **Compact Cards**: Uniform card heights for consistent grid layout
 - **Quick Links**: Direct links to full status pages
 - **Overall Status**: At-a-glance view of whether all systems are operational
 - **localStorage Persistence**: Your preferences are saved in the browser
 
 ## Supported Services
 
-StatusWall monitors 25 popular developer services (alphabetically):
+StatusWall monitors 27 popular developer services (alphabetically):
 
 1. **Cloudflare** - CDN & security
 2. **DigitalOcean** - Cloud infrastructure
@@ -199,7 +200,6 @@ MIT
 - Historical status data and uptime tracking
 - Email/SMS notifications for outages
 - Custom status page grouping
-- Dark mode toggle
 - Mobile app
 - Webhooks for status changes
 - Status history graphs

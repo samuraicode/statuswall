@@ -136,3 +136,74 @@
   color: #5568d3;
   text-decoration: underline;
 }
+
+/* Dark Mode Styles */
+body.dark-mode .status-card {
+  background: rgba(30, 41, 59, 0.8);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-mode .status-card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+body.dark-mode .card-header {
+  border-bottom-color: #334155;
+}
+
+body.dark-mode .service-name {
+  color: #e2e8f0;
+}
+
+body.dark-mode .status-label {
+  color: #cbd5e1;
+}
+
+body.dark-mode .status-description {
+  color: #94a3b8;
+}
+
+body.dark-mode .components {
+  border-top-color: #334155;
+}
+
+body.dark-mode .components h4 {
+  color: #94a3b8;
+}
+
+body.dark-mode .component-name {
+  color: #cbd5e1;
+}
+
+body.dark-mode .component-status.operational {
+  background: rgba(16, 185, 129, 0.2);
+  color: #6ee7b7;
+}
+
+body.dark-mode .component-status.degraded_performance {
+  background: rgba(251, 191, 36, 0.2);
+  color: #fbbf24;
+}
+
+body.dark-mode .component-status.partial_outage {
+  background: rgba(251, 146, 60, 0.2);
+  color: #fb923c;
+}
+
+body.dark-mode .component-status.major_outage {
+  background: rgba(239, 68, 68, 0.2);
+  color: #f87171;
+}
+
+body.dark-mode .card-footer {
+  background: rgba(15, 23, 42, 0.5);
+  border-top-color: #334155;
+}
+
+body.dark-mode .status-link {
+  color: #60a5fa;
+}
+
+body.dark-mode .status-link:hover {
+  color: #93c5fd;
+}

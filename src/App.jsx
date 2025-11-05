@@ -11,6 +11,10 @@ function App() {
   const [showConfig, setShowConfig] = useState(false)
   const [refreshInterval, setRefreshInterval] = useState(5)
   const [secondsUntilRefresh, setSecondsUntilRefresh] = useState(0)
+  const [darkMode, setDarkMode] = useState(() => {
+    const saved = localStorage.getItem('statuswall-darkmode')
+    return saved ? JSON.parse(saved) : false
+  })
 
   const fetchStatuses = async () => {
     try {
@@ -76,6 +80,15 @@ function App() {
   }, [])
 
   useEffect(() => {
+    localStorage.setItem('statuswall-darkmode', JSON.stringify(darkMode))
+    document.body.classList.toggle('dark-mode', darkMode)
+  }, [darkMode])
+
+  const toggleDarkMode = () => {
+    setDarkMode(prev => !prev)
+  }
+
+  useEffect(() => {
     // Reset countdown when refresh interval changes
     setSecondsUntilRefresh(refreshInterval * 60)
 
@@ -125,12 +138,8 @@ function App() {
   if (showConfig) {
     return (
       <div className="app">
-        <header className="header">
-          <h1>StatusWall</h1>
-          <p className="subtitle">Configuration</p>
-        </header>
         <main className="main">
-          <ConfigPage onBack={handleConfigClose} />
+          <ConfigPage onBack={handleConfigClose} darkMode={darkMode} onToggleDarkMode={toggleDarkMode} />
         </main>
       </div>
     )
@@ -154,9 +163,14 @@ function App() {
               </div>
             )}
           </div>
-          <button onClick={() => setShowConfig(true)} className="config-button">
-            ⚙ Configure
-          </button>
+          <div className="header-buttons">
+            <button onClick={toggleDarkMode} className="dark-mode-button" title={darkMode ? 'Light mode' : 'Dark mode'}>
+              {darkMode ? '☀' : '🌙'}
+            </button>
+            <button onClick={() => setShowConfig(true)} className="config-button">
+              ⚙ Configure
+            </button>
+          </div>
         </div>
       </header>
 

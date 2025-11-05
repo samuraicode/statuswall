@@ -110,7 +110,7 @@ async function fetchHerokuStatus(config) {
       description: description,
       lastUpdated: new Date().toISOString(),
       url: 'https://status.heroku.com',
-      components: data.status.map(s => ({
+      components: data.status.slice(0, 5).map(s => ({
         name: s.system,
         status: s.status === 'green' ? 'operational' : 'degraded_performance'
       }))
@@ -125,7 +125,7 @@ async function fetchHerokuStatus(config) {
   }
 }
 
-// Sort statuses by severity (issues first)
+// Sort statuses by severity (issues first), then alphabetically
 function sortByStatus(statuses) {
   const statusPriority = {
     'critical': 0,
@@ -142,7 +142,14 @@ function sortByStatus(statuses) {
   return statuses.sort((a, b) => {
     const priorityA = statusPriority[a.status] ?? 4;
     const priorityB = statusPriority[b.status] ?? 4;
-    return priorityA - priorityB;
+
+    // First sort by priority
+    if (priorityA !== priorityB) {
+      return priorityA - priorityB;
+    }
+
+    // Then sort alphabetically by name
+    return a.name.localeCompare(b.name);
   });
 }
 

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import './ConfigPage.css'
 
-function ConfigPage({ onBack }) {
+function ConfigPage({ onBack, darkMode, onToggleDarkMode }) {
   const [availableServices, setAvailableServices] = useState([])
   const [enabledServices, setEnabledServices] = useState([])
   const [refreshInterval, setRefreshInterval] = useState(5)
@@ -107,23 +107,22 @@ function ConfigPage({ onBack }) {
 
   return (
     <div className="config-page">
-      <div className="config-header">
-        <h2>Configure Status Services</h2>
-        <p className="config-subtitle">
-          Select which services you want to monitor on your StatusWall
-        </p>
-      </div>
-
       <div className="config-actions">
-        <button onClick={handleSelectAll} className="btn-secondary">
-          Select All
-        </button>
-        <button onClick={handleDeselectAll} className="btn-secondary">
-          Deselect All
-        </button>
-        <span className="service-count">
-          {enabledServices.length} of {availableServices.length} selected
-        </span>
+        <div className="config-actions-header">
+          <h2>Configure Status Services</h2>
+          <p>Select which services you want to monitor on your StatusWall</p>
+        </div>
+        <div className="config-actions-buttons">
+          <button onClick={handleSelectAll} className="btn-secondary">
+            Select All
+          </button>
+          <button onClick={handleDeselectAll} className="btn-secondary">
+            Deselect All
+          </button>
+          <span className="service-count">
+            {enabledServices.length} of {availableServices.length} selected
+          </span>
+        </div>
       </div>
 
       <div className="services-list">
@@ -141,7 +140,7 @@ function ConfigPage({ onBack }) {
       </div>
 
       <div className="refresh-interval-section">
-        <h3>Auto-refresh Interval</h3>
+        <h3>Settings</h3>
         <div className="interval-controls">
           <label htmlFor="refresh-interval">
             Refresh every:
@@ -160,6 +159,14 @@ function ConfigPage({ onBack }) {
             <option value="30">30 minutes</option>
             <option value="60">1 hour</option>
           </select>
+        </div>
+        <div className="dark-mode-controls">
+          <label>
+            Theme:
+          </label>
+          <button onClick={onToggleDarkMode} className="theme-toggle-button">
+            {darkMode ? '☀️ Switch to Light' : '🌙 Switch to Dark'}
+          </button>
         </div>
       </div>
 

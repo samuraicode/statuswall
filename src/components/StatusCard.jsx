@@ -34,22 +34,6 @@ function StatusCard({ status }) {
         {status.description && (
           <p className="status-description">{status.description}</p>
         )}
-
-        {status.components && status.components.length > 0 && (
-          <div className="components">
-            <h4>Key Components:</h4>
-            <ul>
-              {status.components.map((comp, idx) => (
-                <li key={idx}>
-                  <span className="component-name">{comp.name}</span>
-                  <span className={`component-status ${comp.status}`}>
-                    {comp.status.replace(/_/g, ' ')}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
       </div>
 
       {status.url && (
