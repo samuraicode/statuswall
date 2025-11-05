@@ -37,8 +37,11 @@ function ConfigPage({ onBack }) {
       // Use localStorage if available, otherwise fall back to server
       const prefs = localPrefs || serverPrefs
 
-      setAvailableServices(services)
-      setEnabledServices(prefs.enabledServices || services.map(s => s.name))
+      // Sort services alphabetically by name
+      const sortedServices = services.sort((a, b) => a.name.localeCompare(b.name))
+
+      setAvailableServices(sortedServices)
+      setEnabledServices(prefs.enabledServices || sortedServices.map(s => s.name))
       setRefreshInterval(prefs.refreshInterval || 5)
       setLoading(false)
     } catch (error) {

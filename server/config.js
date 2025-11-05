@@ -101,6 +101,31 @@ export const statusPages = [
     name: 'Figma',
     url: 'https://status.figma.com/api/v2/status.json',
     type: 'atlassian'
+  },
+  {
+    name: 'DigitalOcean',
+    url: 'https://status.digitalocean.com/api/v2/status.json',
+    type: 'atlassian'
+  },
+  {
+    name: 'SendGrid',
+    url: 'https://status.sendgrid.com/api/v2/status.json',
+    type: 'atlassian'
+  },
+  {
+    name: 'Supabase',
+    url: 'https://status.supabase.com/api/v2/status.json',
+    type: 'atlassian'
+  },
+  {
+    name: 'Netlify',
+    url: 'https://www.netlifystatus.com/api/v2/status.json',
+    type: 'atlassian'
+  },
+  {
+    name: 'Discord',
+    url: 'https://discordstatus.com/api/v2/status.json',
+    type: 'atlassian'
   }
 ];
 
