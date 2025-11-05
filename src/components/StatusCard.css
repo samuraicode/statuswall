@@ -58,6 +58,27 @@
   margin-bottom: 0.75rem;
 }
 
+.issue-duration,
+.last-change {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+}
+
+.duration-label,
+.change-label {
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.duration-value,
+.change-value {
+  color: #1f2937;
+  font-weight: 600;
+}
+
 .components {
   margin-top: 0.75rem;
   padding-top: 0.75rem;
@@ -161,6 +182,16 @@ body.dark-mode .status-label {
 
 body.dark-mode .status-description {
   color: #94a3b8;
+}
+
+body.dark-mode .duration-label,
+body.dark-mode .change-label {
+  color: #94a3b8;
+}
+
+body.dark-mode .duration-value,
+body.dark-mode .change-value {
+  color: #cbd5e1;
 }
 
 body.dark-mode .components {

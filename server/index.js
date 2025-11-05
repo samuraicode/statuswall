@@ -1,7 +1,13 @@
 import express from 'express';
 import cors from 'cors';
 import fetch from 'node-fetch';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import { statusPages } from './config.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = 3001;
@@ -15,16 +21,100 @@ let userPreferences = {
   refreshInterval: 5 // Default refresh interval in minutes
 };
 
+// History storage file path
+const HISTORY_FILE = path.join(__dirname, 'status-history.json');
+
+// Load or initialize history
+let statusHistory = {};
+try {
+  if (fs.existsSync(HISTORY_FILE)) {
+    const data = fs.readFileSync(HISTORY_FILE, 'utf8');
+    statusHistory = JSON.parse(data);
+  }
+} catch (error) {
+  console.error('Failed to load history:', error.message);
+  statusHistory = {};
+}
+
+// Save history to file
+function saveHistory() {
+  try {
+    fs.writeFileSync(HISTORY_FILE, JSON.stringify(statusHistory, null, 2));
+  } catch (error) {
+    console.error('Failed to save history:', error.message);
+  }
+}
+
+// Track status change
+function trackStatusChange(serviceName, status, description) {
+  if (!statusHistory[serviceName]) {
+    statusHistory[serviceName] = {
+      currentStatus: status,
+      lastChange: new Date().toISOString(),
+      changes: []
+    };
+  }
+
+  const history = statusHistory[serviceName];
+  const now = new Date().toISOString();
+
+  // If status changed, record it
+  if (history.currentStatus !== status) {
+    history.changes.unshift({
+      from: history.currentStatus,
+      to: status,
+      timestamp: now,
+      description: description
+    });
+
+    // Keep only last 50 changes
+    if (history.changes.length > 50) {
+      history.changes = history.changes.slice(0, 50);
+    }
+
+    history.currentStatus = status;
+    history.lastChange = now;
+    saveHistory();
+  }
+}
+
+// Get issue duration in milliseconds
+function getIssueDuration(serviceName) {
+  const history = statusHistory[serviceName];
+  if (!history) return null;
+
+  const isIssue = ['major', 'minor', 'critical', 'maintenance'].includes(history.currentStatus);
+  if (!isIssue) return null;
+
+  // Find when the issue started (last transition to non-operational)
+  const lastChange = history.changes.find(c =>
+    !['major', 'minor', 'critical', 'maintenance'].includes(c.from)
+  );
+
+  if (lastChange) {
+    return Date.now() - new Date(lastChange.timestamp).getTime();
+  }
+
+  // If no change found, use lastChange timestamp
+  return Date.now() - new Date(history.lastChange).getTime();
+}
+
 // Parse Atlassian Statuspage format
 async function fetchAtlassianStatus(config) {
   try {
     const response = await fetch(config.url);
     const data = await response.json();
 
+    const status = data.status.indicator;
+    const description = data.status.description;
+
+    // Track status change
+    trackStatusChange(config.name, status, description);
+
     return {
       name: config.name,
-      status: data.status.indicator,
-      description: data.status.description,
+      status: status,
+      description: description,
       lastUpdated: data.page.updated_at,
       url: data.page.url,
       components: data.components?.slice(0, 5).map(c => ({
@@ -33,6 +123,7 @@ async function fetchAtlassianStatus(config) {
       })) || []
     };
   } catch (error) {
+    trackStatusChange(config.name, 'unknown', 'Failed to fetch status');
     return {
       name: config.name,
       status: 'unknown',
@@ -62,6 +153,9 @@ async function fetchSlackStatus(config) {
       description = `${data.active_incidents.length} Active Incident(s)`;
     }
 
+    // Track status change
+    trackStatusChange(config.name, status, description);
+
     return {
       name: config.name,
       status: status,
@@ -74,6 +168,7 @@ async function fetchSlackStatus(config) {
       })) || []
     };
   } catch (error) {
+    trackStatusChange(config.name, 'unknown', 'Failed to fetch status');
     return {
       name: config.name,
       status: 'unknown',
@@ -104,6 +199,9 @@ async function fetchHerokuStatus(config) {
       description = 'Some Systems Degraded';
     }
 
+    // Track status change
+    trackStatusChange(config.name, status, description);
+
     return {
       name: config.name,
       status: status,
@@ -116,6 +214,7 @@ async function fetchHerokuStatus(config) {
       }))
     };
   } catch (error) {
+    trackStatusChange(config.name, 'unknown', 'Failed to fetch status');
     return {
       name: config.name,
       status: 'unknown',
@@ -172,7 +271,23 @@ async function fetchAllStatuses(enabledOnly = false) {
 
   const results = await Promise.all(promises);
   const filtered = results.filter(r => r !== null);
-  return sortByStatus(filtered);
+
+  // Add history data to each result
+  const withHistory = filtered.map(service => {
+    const history = statusHistory[service.name];
+    const issueDuration = getIssueDuration(service.name);
+
+    return {
+      ...service,
+      history: history ? {
+        lastChange: history.lastChange,
+        recentChanges: history.changes.slice(0, 5), // Last 5 changes
+        issueDuration: issueDuration
+      } : null
+    };
+  });
+
+  return sortByStatus(withHistory);
 }
 
 // API endpoint to get all statuses

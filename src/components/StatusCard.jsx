@@ -13,6 +13,38 @@ const statusConfig = {
 function StatusCard({ status }) {
   const statusInfo = statusConfig[status.status] || statusConfig.unknown
 
+  // Format duration
+  const formatDuration = (ms) => {
+    if (!ms) return null
+    const hours = Math.floor(ms / (1000 * 60 * 60))
+    const minutes = Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60))
+
+    if (hours > 24) {
+      const days = Math.floor(hours / 24)
+      return `${days}d ${hours % 24}h`
+    }
+    if (hours > 0) {
+      return `${hours}h ${minutes}m`
+    }
+    return `${minutes}m`
+  }
+
+  const formatRelativeTime = (timestamp) => {
+    if (!timestamp) return null
+    const date = new Date(timestamp)
+    const now = new Date()
+    const diff = now - date
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24))
+    if (days > 0) return `${days}d ago`
+
+    const hours = Math.floor(diff / (1000 * 60 * 60))
+    if (hours > 0) return `${hours}h ago`
+
+    const minutes = Math.floor(diff / (1000 * 60))
+    return `${minutes}m ago`
+  }
+
   return (
     <div className="status-card">
       <div className="card-header">
@@ -33,6 +65,20 @@ function StatusCard({ status }) {
 
         {status.description && (
           <p className="status-description">{status.description}</p>
+        )}
+
+        {status.history && status.history.issueDuration && (
+          <div className="issue-duration">
+            <span className="duration-label">Issue duration:</span>
+            <span className="duration-value">{formatDuration(status.history.issueDuration)}</span>
+          </div>
+        )}
+
+        {status.history && status.history.lastChange && (
+          <div className="last-change">
+            <span className="change-label">Last change:</span>
+            <span className="change-value">{formatRelativeTime(status.history.lastChange)}</span>
+          </div>
         )}
       </div>
 
