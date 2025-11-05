@@ -2,11 +2,11 @@
 
 ## High Priority Features
 
-### 1. Search & Filter (Quick Win)
-- [ ] Add search bar to filter services by name (client-side)
-- [ ] "Show only issues" toggle to hide operational services
-- [ ] Filter by status type (operational, minor, major, critical)
-- [ ] Service count badge showing "X issues, Y operational"
+### 1. Search & Filter (Quick Win) ✅
+- [✅] Add search bar to filter services by name (client-side)
+- [✅] "Show only issues" toggle to hide operational services
+- [✅] Filter by status type (operational, minor, major, critical)
+- [✅] Service count badge showing "X issues, Y operational"
 
 ### 2. Cloud Provider Support (High Value)
 - [ ] AWS Status Parser - https://status.aws.amazon.com/ (custom format)

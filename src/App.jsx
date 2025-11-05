@@ -15,6 +15,9 @@ function App() {
     const saved = localStorage.getItem('statuswall-darkmode')
     return saved ? JSON.parse(saved) : false
   })
+  const [searchQuery, setSearchQuery] = useState('')
+  const [showOnlyIssues, setShowOnlyIssues] = useState(false)
+  const [statusFilter, setStatusFilter] = useState('all')
 
   const fetchStatuses = async () => {
     try {
@@ -120,6 +123,47 @@ function App() {
     return hasIssues ? 'issues' : 'operational'
   }
 
+  // Filter statuses based on search and filters
+  const filteredStatuses = statuses.filter(status => {
+    // Search filter
+    if (searchQuery && !status.name.toLowerCase().includes(searchQuery.toLowerCase())) {
+      return false
+    }
+
+    // Show only issues filter
+    if (showOnlyIssues && (status.status === 'none' || status.status === 'operational')) {
+      return false
+    }
+
+    // Status type filter
+    if (statusFilter !== 'all') {
+      if (statusFilter === 'operational' && status.status !== 'none' && status.status !== 'operational') {
+        return false
+      }
+      if (statusFilter === 'issues' && (status.status === 'none' || status.status === 'operational')) {
+        return false
+      }
+      if (statusFilter === 'minor' && status.status !== 'minor') {
+        return false
+      }
+      if (statusFilter === 'major' && status.status !== 'major') {
+        return false
+      }
+      if (statusFilter === 'critical' && status.status !== 'critical') {
+        return false
+      }
+      if (statusFilter === 'maintenance' && status.status !== 'maintenance') {
+        return false
+      }
+    }
+
+    return true
+  })
+
+  // Calculate counts
+  const issueCount = statuses.filter(s => s.status !== 'none' && s.status !== 'operational').length
+  const operationalCount = statuses.filter(s => s.status === 'none' || s.status === 'operational').length
+
   const handleConfigClose = () => {
     setShowConfig(false)
     fetchStatuses() // Refresh statuses after config changes
@@ -199,6 +243,67 @@ function App() {
         </div>
       )}
 
+      {!loading && statuses.length > 0 && (
+        <div className="filter-bar">
+          <div className="filter-content">
+            <div className="search-box">
+              <span className="search-icon">🔍</span>
+              <input
+                type="text"
+                placeholder="Search services..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="search-input"
+              />
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery('')}
+                  className="clear-search"
+                  title="Clear search"
+                >
+                  ✕
+                </button>
+              )}
+            </div>
+
+            <div className="filter-controls">
+              <label className="filter-toggle">
+                <input
+                  type="checkbox"
+                  checked={showOnlyIssues}
+                  onChange={(e) => setShowOnlyIssues(e.target.checked)}
+                />
+                <span>Show only issues</span>
+              </label>
+
+              <select
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+                className="status-filter-select"
+              >
+                <option value="all">All statuses</option>
+                <option value="operational">Operational only</option>
+                <option value="issues">Any issues</option>
+                <option value="minor">Minor issues</option>
+                <option value="major">Major issues</option>
+                <option value="critical">Critical</option>
+                <option value="maintenance">Maintenance</option>
+              </select>
+
+              <div className="service-count-badge">
+                {issueCount > 0 ? (
+                  <span className="count-issues">{issueCount} issue{issueCount !== 1 ? 's' : ''}</span>
+                ) : (
+                  <span className="count-ok">All operational</span>
+                )}
+                <span className="count-divider">•</span>
+                <span className="count-total">{filteredStatuses.length} of {statuses.length} shown</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       <main className="main">
         {error && (
           <div className="error-banner">
@@ -218,9 +323,23 @@ function App() {
               Configure Services
             </button>
           </div>
+        ) : filteredStatuses.length === 0 ? (
+          <div className="no-results">
+            <p>No services match your filters.</p>
+            <button
+              onClick={() => {
+                setSearchQuery('')
+                setShowOnlyIssues(false)
+                setStatusFilter('all')
+              }}
+              className="config-button"
+            >
+              Clear Filters
+            </button>
+          </div>
         ) : (
           <div className="status-grid">
-            {statuses.map((status, index) => (
+            {filteredStatuses.map((status, index) => (
               <StatusCard key={index} status={status} />
             ))}
           </div>

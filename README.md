@@ -13,6 +13,9 @@ A beautiful web application that aggregates and displays status pages from multi
 - **Flexible Auto-refresh**: Choose refresh intervals from 1 minute to 1 hour
 - **Visual Countdown**: Progress bar shows time until next refresh
 - **Smart Sorting**: Services with issues appear first, then alphabetically
+- **Search & Filter**: Quickly find services by name and filter by status type
+- **Show Only Issues**: Toggle to hide operational services and focus on problems
+- **Service Count Badge**: At-a-glance view of issues vs operational services
 - **Dark Mode**: Toggle between light and dark themes with persistent preference
 - **Clean UI**: Modern, responsive design with blue gradient theme
 - **Compact Cards**: Uniform card heights for consistent grid layout
@@ -100,6 +103,28 @@ Your preferences are saved in localStorage and will persist across browser sessi
 - **Gray (?)**: Unknown - Unable to fetch status
 
 Services with issues are automatically sorted to the top for quick visibility.
+
+### Using Search and Filters
+
+The filter bar below the countdown timer provides several ways to find and focus on specific services:
+
+**Search**: Type any service name to instantly filter the list. For example, type "git" to see GitHub, GitLab, and Bitbucket.
+
+**Show only issues**: Check this toggle to hide all operational services and focus only on services experiencing problems.
+
+**Status filter dropdown**: Filter by specific status types:
+- **All statuses**: Show everything (default)
+- **Operational only**: Show only services that are working normally
+- **Any issues**: Show services with any type of problem
+- **Minor/Major/Critical**: Filter by specific issue severity
+- **Maintenance**: Show only services under maintenance
+
+**Service count badge**: Displays real-time counts:
+- Number of services with issues (red text)
+- "All operational" when everything is working (green text)
+- Number of filtered services vs total enabled services
+
+All filters work together - you can search for "cloud" and show only issues to see cloud services with problems.
 
 ## Configuration
 
