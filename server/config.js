@@ -58,8 +58,18 @@ export const statusPages = [
     type: 'atlassian'
   },
   {
+    name: 'Confluence',
+    url: 'https://confluence.status.atlassian.com/api/v2/status.json',
+    type: 'atlassian'
+  },
+  {
     name: 'Discord',
     url: 'https://discordstatus.com/api/v2/status.json',
+    type: 'atlassian'
+  },
+  {
+    name: 'Docker',
+    url: 'https://www.dockerstatus.com/api/v2/status.json',
     type: 'atlassian'
   },
   {
@@ -95,6 +105,11 @@ export const statusPages = [
   {
     name: 'Grafana Cloud',
     url: 'https://status.grafana.com/api/v2/status.json',
+    type: 'atlassian'
+  },
+  {
+    name: 'HashiCorp',
+    url: 'https://status.hashicorp.com/api/v2/status.json',
     type: 'atlassian'
   },
   {
@@ -225,6 +240,11 @@ export const statusPages = [
   {
     name: 'Travis CI',
     url: 'https://www.traviscistatus.com/api/v2/status.json',
+    type: 'atlassian'
+  },
+  {
+    name: 'Trello',
+    url: 'https://trello.status.atlassian.com/api/v2/status.json',
     type: 'atlassian'
   },
   {
