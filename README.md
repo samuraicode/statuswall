@@ -4,24 +4,47 @@ A beautiful web application that aggregates and displays status pages from multi
 
 ## Features
 
-- **Real-time Monitoring**: Displays current status of multiple services
-- **Auto-refresh**: Automatically updates every 5 minutes
-- **Clean UI**: Modern, responsive design with status indicators
+- **25 Popular Services**: Monitor status of major developer tools and platforms
+- **Configurable Dashboard**: Select which services to monitor from the settings page
+- **Real-time Monitoring**: Displays current status of all enabled services
+- **Flexible Auto-refresh**: Choose refresh intervals from 1 minute to 1 hour
+- **Visual Countdown**: Progress bar shows time until next refresh
+- **Priority Sorting**: Services with issues appear first
+- **Clean UI**: Modern, responsive design with blue gradient theme
 - **Component Details**: View individual component statuses for each service
 - **Quick Links**: Direct links to full status pages
 - **Overall Status**: At-a-glance view of whether all systems are operational
+- **localStorage Persistence**: Your preferences are saved in the browser
 
-## Supported Status Pages
+## Supported Services
 
-Currently supports services using Atlassian Statuspage.io format, including:
-- GitHub
-- Vercel
-- OpenAI
-- Stripe
-- Cloudflare
-- Slack
-- Linear
-- And many more!
+StatusWall monitors 25 popular developer services (alphabetically):
+
+1. **Cloudflare** - CDN & security
+2. **DigitalOcean** - Cloud infrastructure
+3. **Discord** - Communication platform
+4. **Dropbox** - File storage
+5. **Figma** - Design tool
+6. **GitHub** - Code hosting
+7. **Heroku** - Cloud platform
+8. **Jira** - Project management
+9. **Linear** - Project management
+10. **MongoDB** - Database
+11. **Netlify** - Web hosting
+12. **Notion** - Productivity
+13. **npm** - Package manager
+14. **OpenAI** - AI platform
+15. **Postman** - API development
+16. **Redis** - In-memory database
+17. **SendGrid** - Email delivery
+18. **Sentry** - Error tracking
+19. **Slack** - Team communication
+20. **Stripe** - Payment processing
+21. **Supabase** - Backend-as-a-service
+22. **Twilio** - Communications platform
+23. **Vercel** - Deployment platform
+24. **Zoom** - Video conferencing
+25. And more...
 
 ## Getting Started
 
@@ -51,18 +74,41 @@ This will start both the backend API server (port 3001) and the frontend dev ser
 
 4. Open your browser to [http://localhost:3000](http://localhost:3000)
 
+## Usage
+
+### Configuring Services
+
+1. Click the **Configure** button in the top right
+2. Select which services you want to monitor using checkboxes
+3. Use **Select All** or **Deselect All** for quick bulk changes
+4. Choose your preferred auto-refresh interval (1 minute to 1 hour)
+5. Click **Save Changes**
+
+Your preferences are saved in localStorage and will persist across browser sessions.
+
+### Understanding Status Indicators
+
+- **Green (✓)**: Operational - All systems running normally
+- **Yellow (⚠)**: Minor Issues - Some degraded performance
+- **Orange (⚠)**: Major Issues - Significant outages
+- **Red (✗)**: Critical - Major outage or critical issues
+- **Blue (ℹ)**: Maintenance - Scheduled maintenance
+- **Gray (?)**: Unknown - Unable to fetch status
+
+Services with issues are automatically sorted to the top for quick visibility.
+
 ## Configuration
 
-### Adding/Removing Services
+### Adding New Services
 
-Edit `server/config.js` to customize which status pages to monitor:
+Edit `server/config.js` to add more services:
 
 ```javascript
 export const statusPages = [
   {
     name: 'Service Name',
     url: 'https://status.example.com/api/v2/status.json',
-    type: 'atlassian'
+    type: 'atlassian'  // or 'slack', 'heroku'
   },
   // Add more services...
 ];
@@ -71,6 +117,53 @@ export const statusPages = [
 Most services using Statuspage.io follow the pattern:
 - `https://status.servicename.com/api/v2/status.json`
 - `https://www.servicenamestatus.com/api/v2/status.json`
+
+### Supported Status Page Formats
+
+- **Atlassian Statuspage** (most common)
+- **Slack** (custom format)
+- **Heroku** (custom v4 API format)
+
+## API Endpoints
+
+The backend provides these endpoints:
+
+- `GET /api/status` - Returns current status of all enabled services
+- `GET /api/status?services=[...]` - Returns status for specific services
+- `GET /api/services/available` - Returns list of all available services
+- `GET /api/preferences` - Returns user preferences
+- `POST /api/preferences` - Updates user preferences
+
+## Technology Stack
+
+- **Frontend**: React 18, Vite
+- **Backend**: Express.js, Node.js
+- **Styling**: Pure CSS with modern gradients and animations
+- **HTTP Client**: node-fetch
+- **State Management**: React hooks (useState, useEffect)
+- **Data Persistence**: localStorage
+
+## Project Structure
+
+```
+statuswall/
+├── server/
+│   ├── index.js       # Express server with API endpoints
+│   └── config.js      # Status page configuration
+├── src/
+│   ├── components/
+│   │   ├── StatusCard.jsx      # Individual service status card
+│   │   ├── StatusCard.css
+│   │   ├── ConfigPage.jsx      # Configuration interface
+│   │   └── ConfigPage.css
+│   ├── App.jsx        # Main application component
+│   ├── App.css        # Global styles
+│   ├── main.jsx       # Entry point
+│   └── index.css      # Base styles and gradient
+├── index.html
+├── vite.config.js
+└── package.json
+```
 
 ## Production Build
 
@@ -86,52 +179,15 @@ To preview the production build:
 npm run preview
 ```
 
-## Status Indicators
-
-- **Green (✓)**: Operational - All systems running normally
-- **Yellow (⚠)**: Minor Issues - Some degraded performance
-- **Orange (⚠)**: Major Issues - Significant outages
-- **Red (✗)**: Critical - Major outage or critical issues
-- **Blue (ℹ)**: Maintenance - Scheduled maintenance
-- **Gray (?)**: Unknown - Unable to fetch status
-
-## API Endpoints
-
-The backend provides these endpoints:
-
-- `GET /api/status` - Returns current status of all configured services
-- `GET /api/config` - Returns list of configured services
-
-## Technology Stack
-
-- **Frontend**: React 18, Vite
-- **Backend**: Express.js, Node.js
-- **Styling**: Pure CSS with modern gradients and animations
-- **HTTP Client**: node-fetch
-
-## Project Structure
-
-```
-statuswall/
-├── server/
-│   ├── index.js       # Express server
-│   └── config.js      # Status page configuration
-├── src/
-│   ├── components/
-│   │   ├── StatusCard.jsx
-│   │   └── StatusCard.css
-│   ├── App.jsx        # Main application
-│   ├── App.css
-│   ├── main.jsx       # Entry point
-│   └── index.css
-├── index.html
-├── vite.config.js
-└── package.json
-```
-
 ## Contributing
 
 Feel free to submit issues and enhancement requests!
+
+To add a new service:
+1. Find the service's status page API URL
+2. Add it to `server/config.js`
+3. Restart the server
+4. The service will appear in the configuration page
 
 ## License
 
@@ -140,8 +196,10 @@ MIT
 ## Future Enhancements
 
 - Support for more status page formats (AWS, Azure, etc.)
-- User authentication and personalized dashboards
-- Email/SMS notifications for outages
 - Historical status data and uptime tracking
+- Email/SMS notifications for outages
 - Custom status page grouping
-- Dark mode
+- Dark mode toggle
+- Mobile app
+- Webhooks for status changes
+- Status history graphs
