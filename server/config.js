@@ -76,6 +76,31 @@ export const statusPages = [
     name: 'npm',
     url: 'https://status.npmjs.org/api/v2/status.json',
     type: 'atlassian'
+  },
+  {
+    name: 'Sentry',
+    url: 'https://status.sentry.io/api/v2/status.json',
+    type: 'atlassian'
+  },
+  {
+    name: 'Postman',
+    url: 'https://status.postman.com/api/v2/status.json',
+    type: 'atlassian'
+  },
+  {
+    name: 'Jira',
+    url: 'https://jira-software.status.atlassian.com/api/v2/status.json',
+    type: 'atlassian'
+  },
+  {
+    name: 'Zoom',
+    url: 'https://www.zoomstatus.com/api/v2/status.json',
+    type: 'atlassian'
+  },
+  {
+    name: 'Figma',
+    url: 'https://status.figma.com/api/v2/status.json',
+    type: 'atlassian'
   }
 ];
 
