@@ -7,16 +7,23 @@
 .header {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
-  padding: 2rem;
-  text-align: center;
+  padding: 1.5rem 2rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+}
+
 .header h1 {
-  font-size: 2.5rem;
+  font-size: 2rem;
   color: #667eea;
-  margin-bottom: 0.5rem;
+  margin: 0;
   font-weight: 700;
+  white-space: nowrap;
 }
 
 .subtitle {
@@ -25,13 +32,32 @@
   margin-bottom: 1.5rem;
 }
 
+.config-button {
+  background: rgba(102, 126, 234, 0.1);
+  color: #667eea;
+  border: 2px solid #667eea;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.config-button:hover {
+  background: #667eea;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
 .header-info {
   display: flex;
-  justify-content: center;
   align-items: center;
   gap: 2rem;
-  flex-wrap: wrap;
-  margin-top: 1rem;
+  flex: 1;
+  justify-content: center;
 }
 
 .overall-status {
@@ -108,9 +134,9 @@
 
 .status-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-  gap: 1.5rem;
-  margin-bottom: 2rem;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 .refresh-button {
@@ -143,17 +169,42 @@
   font-size: 0.9rem;
 }
 
+.no-services {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: white;
+}
+
+.no-services p {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+}
+
 @media (max-width: 768px) {
+  .header {
+    padding: 1rem;
+  }
+
   .header h1 {
-    font-size: 2rem;
+    font-size: 1.5rem;
+  }
+
+  .header-top {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .header-info {
+    flex-direction: column;
+    gap: 0.75rem;
+    width: 100%;
   }
 
   .status-grid {
     grid-template-columns: 1fr;
   }
 
-  .header-info {
-    flex-direction: column;
-    gap: 1rem;
+  .config-button {
+    width: 100%;
   }
 }

@@ -41,6 +41,11 @@ export const statusPages = [
     name: 'Linear',
     url: 'https://linearstatus.com/api/v2/status.json',
     type: 'atlassian'
+  },
+  {
+    name: 'Heroku',
+    url: 'https://status.heroku.com/api/v4/current-status',
+    type: 'heroku'
   }
 ];
 

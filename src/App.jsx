@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import StatusCard from './components/StatusCard'
+import ConfigPage from './components/ConfigPage'
 import './App.css'
 
 function App() {
@@ -7,6 +8,7 @@ function App() {
   const [loading, setLoading] = useState(true)
   const [lastUpdated, setLastUpdated] = useState(null)
   const [error, setError] = useState(null)
+  const [showConfig, setShowConfig] = useState(false)
 
   const fetchStatuses = async () => {
     try {
@@ -40,23 +42,46 @@ function App() {
     return hasIssues ? 'issues' : 'operational'
   }
 
+  const handleConfigClose = () => {
+    setShowConfig(false)
+    fetchStatuses() // Refresh statuses after config changes
+  }
+
+  if (showConfig) {
+    return (
+      <div className="app">
+        <header className="header">
+          <h1>StatusWall</h1>
+          <p className="subtitle">Configuration</p>
+        </header>
+        <main className="main">
+          <ConfigPage onBack={handleConfigClose} />
+        </main>
+      </div>
+    )
+  }
+
   return (
     <div className="app">
       <header className="header">
-        <h1>StatusWall</h1>
-        <p className="subtitle">Monitor all your dependencies in one place</p>
-        <div className="header-info">
-          <div className={`overall-status ${getOverallStatus()}`}>
-            {getOverallStatus() === 'operational' && '✓ All Systems Operational'}
-            {getOverallStatus() === 'issues' && '⚠ Some Systems Experiencing Issues'}
-            {getOverallStatus() === 'checking' && '⟳ Checking...'}
-            {getOverallStatus() === 'error' && '✗ Error Loading Statuses'}
-          </div>
-          {lastUpdated && (
-            <div className="last-updated">
-              Last updated: {lastUpdated.toLocaleTimeString()}
+        <div className="header-top">
+          <h1>StatusWall</h1>
+          <div className="header-info">
+            <div className={`overall-status ${getOverallStatus()}`}>
+              {getOverallStatus() === 'operational' && '✓ All Systems Operational'}
+              {getOverallStatus() === 'issues' && '⚠ Some Systems Experiencing Issues'}
+              {getOverallStatus() === 'checking' && '⟳ Checking...'}
+              {getOverallStatus() === 'error' && '✗ Error Loading Statuses'}
             </div>
-          )}
+            {lastUpdated && (
+              <div className="last-updated">
+                Last updated: {lastUpdated.toLocaleTimeString()}
+              </div>
+            )}
+          </div>
+          <button onClick={() => setShowConfig(true)} className="config-button">
+            ⚙ Configure
+          </button>
         </div>
       </header>
 
@@ -72,6 +97,13 @@ function App() {
 
         {loading ? (
           <div className="loading">Loading statuses...</div>
+        ) : statuses.length === 0 ? (
+          <div className="no-services">
+            <p>No services configured.</p>
+            <button onClick={() => setShowConfig(true)} className="config-button">
+              Configure Services
+            </button>
+          </div>
         ) : (
           <div className="status-grid">
             {statuses.map((status, index) => (
@@ -80,9 +112,11 @@ function App() {
           </div>
         )}
 
-        <button onClick={fetchStatuses} className="refresh-button">
-          Refresh Now
-        </button>
+        {statuses.length > 0 && (
+          <button onClick={fetchStatuses} className="refresh-button">
+            Refresh Now
+          </button>
+        )}
       </main>
 
       <footer className="footer">
