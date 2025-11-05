@@ -51,6 +51,31 @@ export const statusPages = [
     name: 'MongoDB',
     url: 'https://status.mongodb.com/api/v2/status.json',
     type: 'atlassian'
+  },
+  {
+    name: 'Twilio',
+    url: 'https://status.twilio.com/api/v2/status.json',
+    type: 'atlassian'
+  },
+  {
+    name: 'Dropbox',
+    url: 'https://status.dropbox.com/api/v2/status.json',
+    type: 'atlassian'
+  },
+  {
+    name: 'Notion',
+    url: 'https://www.notion-status.com/api/v2/status.json',
+    type: 'atlassian'
+  },
+  {
+    name: 'Redis',
+    url: 'https://status.redis.io/api/v2/status.json',
+    type: 'atlassian'
+  },
+  {
+    name: 'npm',
+    url: 'https://status.npmjs.org/api/v2/status.json',
+    type: 'atlassian'
   }
 ];
 
