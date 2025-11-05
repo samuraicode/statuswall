@@ -41,7 +41,7 @@
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   overflow: hidden;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
 }
 
 .service-item {
@@ -80,6 +80,52 @@
   background: #f3f4f6;
   padding: 0.25rem 0.75rem;
   border-radius: 12px;
+}
+
+.refresh-interval-section {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.refresh-interval-section h3 {
+  font-size: 1.1rem;
+  color: #1f2937;
+  margin-bottom: 1rem;
+}
+
+.interval-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.interval-controls label {
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.interval-select {
+  padding: 0.5rem 1rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 1rem;
+  color: #1f2937;
+  background: white;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.interval-select:hover {
+  border-color: #667eea;
+}
+
+.interval-select:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
 .config-footer {

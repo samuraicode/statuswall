@@ -9,11 +9,31 @@ function App() {
   const [lastUpdated, setLastUpdated] = useState(null)
   const [error, setError] = useState(null)
   const [showConfig, setShowConfig] = useState(false)
+  const [refreshInterval, setRefreshInterval] = useState(5)
+  const [secondsUntilRefresh, setSecondsUntilRefresh] = useState(0)
 
   const fetchStatuses = async () => {
     try {
       setError(null)
-      const response = await fetch('/api/status')
+
+      // Get enabled services from localStorage
+      const stored = localStorage.getItem('statuswall-preferences')
+      let enabledServices = null
+      if (stored) {
+        try {
+          const prefs = JSON.parse(stored)
+          enabledServices = prefs.enabledServices
+        } catch (e) {
+          console.error('Failed to parse localStorage:', e)
+        }
+      }
+
+      // Send preferences as query param if available
+      const url = enabledServices
+        ? `/api/status?services=${encodeURIComponent(JSON.stringify(enabledServices))}`
+        : '/api/status'
+
+      const response = await fetch(url)
       if (!response.ok) throw new Error('Failed to fetch statuses')
       const data = await response.json()
       setStatuses(data)
@@ -25,12 +45,57 @@ function App() {
     }
   }
 
+  const loadPreferences = async () => {
+    try {
+      // Try to load from localStorage first
+      const stored = localStorage.getItem('statuswall-preferences')
+      if (stored) {
+        try {
+          const localPrefs = JSON.parse(stored)
+          setRefreshInterval(localPrefs.refreshInterval || 5)
+          return // Use localStorage and skip server request
+        } catch (e) {
+          console.error('Failed to parse localStorage:', e)
+        }
+      }
+
+      // Fall back to server if localStorage not available
+      const response = await fetch('/api/preferences')
+      if (response.ok) {
+        const prefs = await response.json()
+        setRefreshInterval(prefs.refreshInterval || 5)
+      }
+    } catch (err) {
+      console.error('Failed to load preferences:', err)
+    }
+  }
+
   useEffect(() => {
     fetchStatuses()
-    // Auto-refresh every 5 minutes
-    const interval = setInterval(fetchStatuses, 5 * 60 * 1000)
-    return () => clearInterval(interval)
+    loadPreferences()
   }, [])
+
+  useEffect(() => {
+    // Reset countdown when refresh interval changes
+    setSecondsUntilRefresh(refreshInterval * 60)
+
+    const interval = setInterval(fetchStatuses, refreshInterval * 60 * 1000)
+    return () => clearInterval(interval)
+  }, [refreshInterval])
+
+  // Countdown timer
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setSecondsUntilRefresh(prev => {
+        if (prev <= 1) {
+          return refreshInterval * 60 // Reset countdown
+        }
+        return prev - 1
+      })
+    }, 1000)
+
+    return () => clearInterval(timer)
+  }, [refreshInterval])
 
   const getOverallStatus = () => {
     if (loading) return 'checking'
@@ -45,6 +110,16 @@ function App() {
   const handleConfigClose = () => {
     setShowConfig(false)
     fetchStatuses() // Refresh statuses after config changes
+    loadPreferences() // Reload refresh interval
+  }
+
+  const formatCountdown = (seconds) => {
+    const mins = Math.floor(seconds / 60)
+    const secs = seconds % 60
+    if (mins > 0) {
+      return `${mins}m ${secs}s`
+    }
+    return `${secs}s`
   }
 
   if (showConfig) {
@@ -85,6 +160,31 @@ function App() {
         </div>
       </header>
 
+      {secondsUntilRefresh > 0 && (
+        <div className="countdown-bar">
+          <div className="countdown-content">
+            <span className="countdown-text">
+              Next refresh in {formatCountdown(secondsUntilRefresh)}
+            </span>
+            <div className="countdown-progress">
+              <div
+                className="countdown-progress-fill"
+                style={{
+                  width: `${(secondsUntilRefresh / (refreshInterval * 60)) * 100}%`
+                }}
+              />
+            </div>
+            <button
+              onClick={fetchStatuses}
+              className="refresh-icon-button"
+              title="Refresh now"
+            >
+              ⟳
+            </button>
+          </div>
+        </div>
+      )}
+
       <main className="main">
         {error && (
           <div className="error-banner">
@@ -111,16 +211,10 @@ function App() {
             ))}
           </div>
         )}
-
-        {statuses.length > 0 && (
-          <button onClick={fetchStatuses} className="refresh-button">
-            Refresh Now
-          </button>
-        )}
       </main>
 
       <footer className="footer">
-        <p>Auto-refreshes every 5 minutes</p>
+        <p>Auto-refreshes every {refreshInterval} {refreshInterval === 1 ? 'minute' : 'minutes'}</p>
       </footer>
     </div>
   )

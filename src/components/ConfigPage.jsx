@@ -4,6 +4,7 @@ import './ConfigPage.css'
 function ConfigPage({ onBack }) {
   const [availableServices, setAvailableServices] = useState([])
   const [enabledServices, setEnabledServices] = useState([])
+  const [refreshInterval, setRefreshInterval] = useState(5)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [message, setMessage] = useState(null)
@@ -14,16 +15,31 @@ function ConfigPage({ onBack }) {
 
   const loadConfig = async () => {
     try {
+      // Try to load from localStorage first
+      const stored = localStorage.getItem('statuswall-preferences')
+      let localPrefs = null
+      if (stored) {
+        try {
+          localPrefs = JSON.parse(stored)
+        } catch (e) {
+          console.error('Failed to parse localStorage:', e)
+        }
+      }
+
       const [servicesRes, prefsRes] = await Promise.all([
         fetch('/api/services/available'),
         fetch('/api/preferences')
       ])
 
       const services = await servicesRes.json()
-      const prefs = await prefsRes.json()
+      const serverPrefs = await prefsRes.json()
+
+      // Use localStorage if available, otherwise fall back to server
+      const prefs = localPrefs || serverPrefs
 
       setAvailableServices(services)
-      setEnabledServices(prefs.enabledServices)
+      setEnabledServices(prefs.enabledServices || services.map(s => s.name))
+      setRefreshInterval(prefs.refreshInterval || 5)
       setLoading(false)
     } catch (error) {
       console.error('Failed to load configuration:', error)
@@ -44,10 +60,15 @@ function ConfigPage({ onBack }) {
     setMessage(null)
 
     try {
+      // Save to localStorage
+      const preferences = { enabledServices, refreshInterval }
+      localStorage.setItem('statuswall-preferences', JSON.stringify(preferences))
+
+      // Also save to server
       const response = await fetch('/api/preferences', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ enabledServices })
+        body: JSON.stringify({ enabledServices, refreshInterval })
       })
 
       if (response.ok) {
@@ -114,6 +135,29 @@ function ConfigPage({ onBack }) {
             <span className="service-type">{service.type}</span>
           </label>
         ))}
+      </div>
+
+      <div className="refresh-interval-section">
+        <h3>Auto-refresh Interval</h3>
+        <div className="interval-controls">
+          <label htmlFor="refresh-interval">
+            Refresh every:
+          </label>
+          <select
+            id="refresh-interval"
+            value={refreshInterval}
+            onChange={(e) => setRefreshInterval(parseInt(e.target.value))}
+            className="interval-select"
+          >
+            <option value="1">1 minute</option>
+            <option value="2">2 minutes</option>
+            <option value="5">5 minutes</option>
+            <option value="10">10 minutes</option>
+            <option value="15">15 minutes</option>
+            <option value="30">30 minutes</option>
+            <option value="60">1 hour</option>
+          </select>
+        </div>
       </div>
 
       {message && (

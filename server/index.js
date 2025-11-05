@@ -11,7 +11,8 @@ app.use(express.json());
 
 // In-memory storage for user preferences (in production, use a database)
 let userPreferences = {
-  enabledServices: statusPages.map(p => p.name) // All enabled by default
+  enabledServices: statusPages.map(p => p.name), // All enabled by default
+  refreshInterval: 5 // Default refresh interval in minutes
 };
 
 // Parse Atlassian Statuspage format
@@ -170,7 +171,24 @@ async function fetchAllStatuses(enabledOnly = false) {
 // API endpoint to get all statuses
 app.get('/api/status', async (req, res) => {
   try {
-    const statuses = await fetchAllStatuses(true); // Only fetch enabled services
+    // Check for services in query param (from localStorage)
+    let servicesToFetch = null;
+    if (req.query.services) {
+      try {
+        servicesToFetch = JSON.parse(req.query.services);
+        // Temporarily override userPreferences for this request
+        const originalEnabled = userPreferences.enabledServices;
+        userPreferences.enabledServices = servicesToFetch;
+        const statuses = await fetchAllStatuses(true);
+        userPreferences.enabledServices = originalEnabled; // Restore
+        return res.json(statuses);
+      } catch (e) {
+        console.error('Failed to parse services query param:', e);
+      }
+    }
+
+    // Fall back to server preferences
+    const statuses = await fetchAllStatuses(true);
     res.json(statuses);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -189,7 +207,7 @@ app.get('/api/preferences', (req, res) => {
 
 // Endpoint to update user preferences
 app.post('/api/preferences', (req, res) => {
-  const { enabledServices } = req.body;
+  const { enabledServices, refreshInterval } = req.body;
 
   if (!Array.isArray(enabledServices)) {
     return res.status(400).json({ error: 'enabledServices must be an array' });
@@ -201,6 +219,15 @@ app.post('/api/preferences', (req, res) => {
   );
 
   userPreferences.enabledServices = validServices;
+
+  // Validate and update refresh interval (1-60 minutes)
+  if (refreshInterval !== undefined) {
+    const interval = parseInt(refreshInterval);
+    if (!isNaN(interval) && interval >= 1 && interval <= 60) {
+      userPreferences.refreshInterval = interval;
+    }
+  }
+
   res.json(userPreferences);
 });
 
