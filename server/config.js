@@ -126,6 +126,16 @@ export const statusPages = [
     name: 'Discord',
     url: 'https://discordstatus.com/api/v2/status.json',
     type: 'atlassian'
+  },
+  {
+    name: 'Atlassian',
+    url: 'https://status.atlassian.com/api/v2/status.json',
+    type: 'atlassian'
+  },
+  {
+    name: 'Snowflake',
+    url: 'https://status.snowflake.com/api/v2/status.json',
+    type: 'atlassian'
   }
 ];
 
