@@ -266,39 +266,37 @@ function App() {
               )}
             </div>
 
-            <div className="filter-controls">
-              <label className="filter-toggle">
-                <input
-                  type="checkbox"
-                  checked={showOnlyIssues}
-                  onChange={(e) => setShowOnlyIssues(e.target.checked)}
-                />
-                <span>Show only issues</span>
-              </label>
+            <label className="filter-toggle">
+              <input
+                type="checkbox"
+                checked={showOnlyIssues}
+                onChange={(e) => setShowOnlyIssues(e.target.checked)}
+              />
+              <span>Issues only</span>
+            </label>
 
-              <select
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value)}
-                className="status-filter-select"
-              >
-                <option value="all">All statuses</option>
-                <option value="operational">Operational only</option>
-                <option value="issues">Any issues</option>
-                <option value="minor">Minor issues</option>
-                <option value="major">Major issues</option>
-                <option value="critical">Critical</option>
-                <option value="maintenance">Maintenance</option>
-              </select>
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="status-filter-select"
+            >
+              <option value="all">All statuses</option>
+              <option value="operational">Operational</option>
+              <option value="issues">Any issues</option>
+              <option value="minor">Minor</option>
+              <option value="major">Major</option>
+              <option value="critical">Critical</option>
+              <option value="maintenance">Maintenance</option>
+            </select>
 
-              <div className="service-count-badge">
-                {issueCount > 0 ? (
-                  <span className="count-issues">{issueCount} issue{issueCount !== 1 ? 's' : ''}</span>
-                ) : (
-                  <span className="count-ok">All operational</span>
-                )}
-                <span className="count-divider">•</span>
-                <span className="count-total">{filteredStatuses.length} of {statuses.length} shown</span>
-              </div>
+            <div className="service-count-badge">
+              {issueCount > 0 ? (
+                <span className="count-issues">{issueCount} issue{issueCount !== 1 ? 's' : ''}</span>
+              ) : (
+                <span className="count-ok">All OK</span>
+              )}
+              <span className="count-divider">•</span>
+              <span className="count-total">{filteredStatuses.length}/{statuses.length}</span>
             </div>
           </div>
         </div>
