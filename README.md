@@ -131,25 +131,23 @@ All filters work together - you can search for "cloud" and show only issues to s
 
 ### Viewing Incident Details
 
-Click on any service card to open a detailed incident modal showing:
+Click on any service card to open a detailed incident modal. Each card displays a subtle info icon (ℹ) in the bottom right corner indicating it's clickable.
 
-**Current Status**: The overall status with color-coded badge and last update time
+**Status Cards Display**:
+- Service name and status indicator
+- Status label with inline issue duration (e.g., "Minor Issues (47m)")
+- Issue description if available
+- Last change timestamp (when the status last changed to a different state)
+- Clickable info icon hint
 
-**Components**: List of all service components with individual statuses. Each component shows:
-- Status indicator dot (color-coded)
-- Component name
-- Current status label
+**Incident Modal Shows**:
+- **Current Status**: Overall status with color-coded badge and last update time
+- **Components**: List of all service components with individual statuses (status dot, component name, status label)
+- **Recent Status Changes**: Timeline of recent status transitions with timestamps and descriptions
+- **Issue Duration**: How long the current issue has been ongoing
+- **Links**: Direct link to the service's full status page
 
-**Recent Status Changes**: Timeline of recent status transitions showing:
-- Previous and new status
-- Timestamp of each change
-- Status descriptions
-
-**Issue Duration**: For active incidents, shows how long the issue has been ongoing
-
-**Links**: Direct link to the service's full status page for more details
-
-The modal works in both light and dark modes and includes smooth animations. Click outside the modal or press the X button to close it.
+The modal works in both light and dark modes with smooth animations. Click outside the modal or press the X button to close it.
 
 ## Configuration
 

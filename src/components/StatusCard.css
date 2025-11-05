@@ -44,6 +44,7 @@
 
 .card-body {
   padding: 0.75rem 1rem;
+  position: relative;
 }
 
 .status-label {
@@ -59,7 +60,6 @@
   margin-bottom: 0.75rem;
 }
 
-.issue-duration,
 .last-change {
   display: flex;
   align-items: center;
@@ -68,13 +68,11 @@
   font-size: 0.75rem;
 }
 
-.duration-label,
 .change-label {
   color: #6b7280;
   font-weight: 500;
 }
 
-.duration-value,
 .change-value {
   color: #1f2937;
   font-weight: 600;
@@ -138,6 +136,23 @@
   color: #991b1b;
 }
 
+.card-click-hint {
+  position: absolute;
+  bottom: 0.5rem;
+  right: 0.75rem;
+  opacity: 0.4;
+  transition: opacity 0.2s ease;
+}
+
+.status-card:hover .card-click-hint {
+  opacity: 0.7;
+}
+
+.hint-icon {
+  font-size: 0.9rem;
+  color: #6b7280;
+}
+
 .card-footer {
   padding: 0.6rem 1rem;
   background: #f9fafb;
@@ -185,12 +200,10 @@ body.dark-mode .status-description {
   color: #94a3b8;
 }
 
-body.dark-mode .duration-label,
 body.dark-mode .change-label {
   color: #94a3b8;
 }
 
-body.dark-mode .duration-value,
 body.dark-mode .change-value {
   color: #cbd5e1;
 }
@@ -238,4 +251,8 @@ body.dark-mode .status-link {
 
 body.dark-mode .status-link:hover {
   color: #93c5fd;
+}
+
+body.dark-mode .hint-icon {
+  color: #94a3b8;
 }

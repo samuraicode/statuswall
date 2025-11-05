@@ -45,6 +45,14 @@ function StatusCard({ status, onClick }) {
     return `${minutes}m ago`
   }
 
+  // Build status label with duration if applicable
+  const getStatusLabelWithDuration = () => {
+    if (status.history && status.history.issueDuration) {
+      return `${statusInfo.label} (${formatDuration(status.history.issueDuration)})`
+    }
+    return statusInfo.label
+  }
+
   return (
     <div className="status-card" onClick={onClick}>
       <div className="card-header">
@@ -60,18 +68,11 @@ function StatusCard({ status, onClick }) {
 
       <div className="card-body">
         <div className="status-label" style={{ color: statusInfo.color }}>
-          {statusInfo.label}
+          {getStatusLabelWithDuration()}
         </div>
 
         {status.description && (
           <p className="status-description">{status.description}</p>
-        )}
-
-        {status.history && status.history.issueDuration && (
-          <div className="issue-duration">
-            <span className="duration-label">Issue duration:</span>
-            <span className="duration-value">{formatDuration(status.history.issueDuration)}</span>
-          </div>
         )}
 
         {status.history && status.history.lastChange && (
@@ -80,6 +81,10 @@ function StatusCard({ status, onClick }) {
             <span className="change-value">{formatRelativeTime(status.history.lastChange)}</span>
           </div>
         )}
+
+        <div className="card-click-hint" title="Click for details">
+          <span className="hint-icon">ℹ</span>
+        </div>
       </div>
     </div>
   )
