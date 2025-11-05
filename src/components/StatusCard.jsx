@@ -10,8 +10,16 @@ const statusConfig = {
   unknown: { label: 'Unknown', color: '#6b7280', icon: '?' }
 }
 
-function StatusCard({ status }) {
+function StatusCard({ status, onClick }) {
   const statusInfo = statusConfig[status.status] || statusConfig.unknown
+
+  const handleCardClick = (e) => {
+    // Don't trigger if clicking on the link
+    if (e.target.closest('.status-link')) {
+      return
+    }
+    onClick?.()
+  }
 
   // Format duration
   const formatDuration = (ms) => {
@@ -46,7 +54,7 @@ function StatusCard({ status }) {
   }
 
   return (
-    <div className="status-card">
+    <div className="status-card" onClick={handleCardClick}>
       <div className="card-header">
         <h3 className="service-name">{status.name}</h3>
         <div

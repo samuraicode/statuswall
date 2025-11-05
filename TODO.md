@@ -35,12 +35,12 @@
 
 ## Medium Priority Features
 
-### 6. Incident Details
-- [ ] Click to expand incident descriptions
-- [ ] Show affected components in detail
-- [ ] Display incident updates/timeline
+### 6. Incident Details ✅
+- [✅] Click to expand incident descriptions
+- [✅] Show affected components in detail
+- [✅] Display incident updates/timeline
 - [ ] Link to postmortems when available
-- [ ] Show incident severity history
+- [✅] Show incident severity history
 
 ### 7. Multiple Dashboards
 - [ ] Create named dashboards ("Production Stack", "Dev Tools", etc.)

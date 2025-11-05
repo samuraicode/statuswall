@@ -16,6 +16,9 @@ A beautiful web application that aggregates and displays status pages from multi
 - **Search & Filter**: Quickly find services by name and filter by status type
 - **Show Only Issues**: Toggle to hide operational services and focus on problems
 - **Service Count Badge**: At-a-glance view of issues vs operational services
+- **Incident Details Modal**: Click any service card to see detailed incident information
+- **Component Status**: View status of individual components and affected systems
+- **Status History Timeline**: See recent status changes with timestamps
 - **Dark Mode**: Toggle between light and dark themes with persistent preference
 - **Clean UI**: Modern, responsive design with blue gradient theme
 - **Compact Cards**: Uniform card heights for consistent grid layout
@@ -125,6 +128,28 @@ The filter bar below the countdown timer provides several ways to find and focus
 - Number of filtered services vs total enabled services
 
 All filters work together - you can search for "cloud" and show only issues to see cloud services with problems.
+
+### Viewing Incident Details
+
+Click on any service card to open a detailed incident modal showing:
+
+**Current Status**: The overall status with color-coded badge and last update time
+
+**Components**: List of all service components with individual statuses. Each component shows:
+- Status indicator dot (color-coded)
+- Component name
+- Current status label
+
+**Recent Status Changes**: Timeline of recent status transitions showing:
+- Previous and new status
+- Timestamp of each change
+- Status descriptions
+
+**Issue Duration**: For active incidents, shows how long the issue has been ongoing
+
+**Links**: Direct link to the service's full status page for more details
+
+The modal works in both light and dark modes and includes smooth animations. Click outside the modal or press the X button to close it.
 
 ## Configuration
 

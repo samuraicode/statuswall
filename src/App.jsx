@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import StatusCard from './components/StatusCard'
 import ConfigPage from './components/ConfigPage'
+import IncidentModal from './components/IncidentModal'
 import './App.css'
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
   const [searchQuery, setSearchQuery] = useState('')
   const [showOnlyIssues, setShowOnlyIssues] = useState(false)
   const [statusFilter, setStatusFilter] = useState('all')
+  const [selectedService, setSelectedService] = useState(null)
 
   const fetchStatuses = async () => {
     try {
@@ -338,7 +340,11 @@ function App() {
         ) : (
           <div className="status-grid">
             {filteredStatuses.map((status, index) => (
-              <StatusCard key={index} status={status} />
+              <StatusCard
+                key={index}
+                status={status}
+                onClick={() => setSelectedService(status)}
+              />
             ))}
           </div>
         )}
@@ -347,6 +353,13 @@ function App() {
       <footer className="footer">
         <p>Auto-refreshes every {refreshInterval} {refreshInterval === 1 ? 'minute' : 'minutes'}</p>
       </footer>
+
+      {selectedService && (
+        <IncidentModal
+          service={selectedService}
+          onClose={() => setSelectedService(null)}
+        />
+      )}
     </div>
   )
 }
