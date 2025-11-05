@@ -290,28 +290,73 @@ async function fetchAllStatuses(enabledOnly = false) {
   return sortByStatus(withHistory);
 }
 
+// Cache configuration for multi-user support
+const CACHE_TTL = 120000; // 2 minutes in milliseconds
+let statusCache = {
+  data: null,
+  timestamp: null
+};
+
+// Check if cache is still valid
+function isCacheValid() {
+  return statusCache.data &&
+         statusCache.timestamp &&
+         (Date.now() - statusCache.timestamp) < CACHE_TTL;
+}
+
+// Filter cached data by user's service preferences
+function filterByServices(allStatuses, serviceNames) {
+  if (!serviceNames || serviceNames.length === 0) {
+    return allStatuses;
+  }
+  return allStatuses.filter(status => serviceNames.includes(status.name));
+}
+
+// Background polling - fetches status for all services every 2 minutes
+async function backgroundStatusPoll() {
+  try {
+    console.log('Background poll: Fetching status for all services...');
+    const statuses = await fetchAllStatuses(false); // Fetch all services
+    statusCache.data = statuses;
+    statusCache.timestamp = Date.now();
+    console.log(`Background poll: Cached ${statuses.length} services at ${new Date().toISOString()}`);
+  } catch (error) {
+    console.error('Background poll failed:', error.message);
+  }
+}
+
+// Start background polling
+setInterval(backgroundStatusPoll, CACHE_TTL);
+// Initial fetch on startup
+backgroundStatusPoll();
+
 // API endpoint to get all statuses
 app.get('/api/status', async (req, res) => {
   try {
-    // Check for services in query param (from localStorage)
-    let servicesToFetch = null;
+    // Parse user's enabled services from query param
+    let enabledServices = null;
     if (req.query.services) {
       try {
-        servicesToFetch = JSON.parse(req.query.services);
-        // Temporarily override userPreferences for this request
-        const originalEnabled = userPreferences.enabledServices;
-        userPreferences.enabledServices = servicesToFetch;
-        const statuses = await fetchAllStatuses(true);
-        userPreferences.enabledServices = originalEnabled; // Restore
-        return res.json(statuses);
+        enabledServices = JSON.parse(req.query.services);
       } catch (e) {
         console.error('Failed to parse services query param:', e);
       }
     }
 
-    // Fall back to server preferences
-    const statuses = await fetchAllStatuses(true);
-    res.json(statuses);
+    // If cache is valid, use it
+    if (isCacheValid()) {
+      const filtered = filterByServices(statusCache.data, enabledServices);
+      return res.json(filtered);
+    }
+
+    // Cache miss or expired - fetch immediately
+    console.log('Cache miss - fetching fresh data');
+    const statuses = await fetchAllStatuses(false);
+    statusCache.data = statuses;
+    statusCache.timestamp = Date.now();
+
+    const filtered = filterByServices(statuses, enabledServices);
+    res.json(filtered);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
