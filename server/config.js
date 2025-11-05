@@ -46,6 +46,11 @@ export const statusPages = [
     name: 'Heroku',
     url: 'https://status.heroku.com/api/v4/current-status',
     type: 'heroku'
+  },
+  {
+    name: 'MongoDB',
+    url: 'https://status.mongodb.com/api/v2/status.json',
+    type: 'atlassian'
   }
 ];
 
